@@ -12,17 +12,21 @@ In the healthcare sector, vast amounts of unstructured clinical data—such as a
 
 We utilized the **MIMIC-IV Clinical Database Demo (v2.2)**. Since the demo lacked free-text notes, we implemented a sophisticated **Scaffold-and-Augment** pipeline to generate high-fidelity, realistic synthetic clinical summaries that map objective clinical data to subjective patient reports.
 
-## Methodology: The Scaffold-and-Augment Pipeline
 
-Our architecture separates deterministic clinical logic from generative text creation to ensure consistency and prevent clinical hallucinations:
+זה נשמע מצוין ומסודר מאוד. הנה ניסוח מקצועי ומובנה שתוכלי להעתיק ל-README שלך. הוא שומר על הסדר הלוגי שביקשת ומדגיש את המקצועיות הטכנית והרפואית של הפרויקט.
 
-* **Phase A: Fact Profile Generation**: Mapping rows from the `unified_table.csv` into hierarchical JSON structures (demographics, labs, procedures, etc.). This expanded our 275 original admissions into ~950 factual profiles.
-* **Phase B: Symptom Enrichment**: Augmenting profiles with subjective symptoms (e.g., pain, chills) based on official clinical guidelines (CDC, IDSA, StatPearls). We generated ~1,900 enriched profiles, ensuring a balanced distribution of severity levels and infection categories.
-* **Phase C: Quality Assurance**: Rigorous validation to ensure label consistency and prevent **label-leakage** (ensuring no clinical labels appear in the synthetic text).
-* **Phase D: LLM Synthesis**: Using local LLMs (via Ollama) to convert verified clinical facts into natural-sounding narratives. This approach provides:
-* **Control**: Every clinical decision is traceable.
-* **Diversity**: Variance is driven by factual profiles rather than just stylistic LLM output.
-* **Accuracy**: Prevention of impossible clinical scenarios (e.g., verbal reports from intubated patients).
+---
+
+### Project Methodology: The Pipeline from MIMIC-IV to Synthetic Clinical Notes
+
+Our project follows a rigorous, multi-stage pipeline designed to generate realistic clinical narratives while ensuring data integrity and clinical accuracy.
+
+1. **Data Acquisition (MIMIC-IV Demo):** We utilized the **MIMIC-IV Clinical Database Demo v2.2**. This dataset provided the foundational structured records (Hosp & ICU modules) required to build our clinical foundation.
+2. **Unified Table Construction:** We synthesized a `unified_table.csv` at the admission-level (one row per `hadm_id`). We carefully selected clinical columns such as demographics, lab results, and procedures, while applying **Anti-Leakage protocols** (generalizing antibiotic names and diagnosis titles) to ensure the model focuses on clinical context rather than explicit labels.
+3. **Fact Profile Generation (Scaffold):** Using our `Scaffold-and-Augment` methodology, we transformed each row from the unified table into multiple, diverse factual profiles in JSON format. Each profile focuses on different clinical aspects (e.g., admission review, lab results, or procedural support), ensuring a rich variety of clinical facts while maintaining the veracity of the original data.
+4. **Symptom Enrichment & Augmentation:** To mirror real-world subjective reporting, we integrated a symptom knowledge base derived from official clinical guidelines (CDC, IDSA, NHSN). We augmented the profiles by injecting subjective symptoms tailored to specific infection categories (e.g., respiratory symptoms for pneumonia, urinary symptoms for UTI). This ensures clinical consistency—patients are never assigned contradictory symptoms.
+5. **LLM-Based Narrative Synthesis:** We employed local LLMs (via **Ollama**) to convert these structured JSON profiles into natural-sounding clinical narratives. By providing only pre-verified facts, we prevent clinical hallucinations and ensure that the generative model acts as a writer, not an originator of clinical facts.
+6. **EDA & Model Training & Evaluation:** We performed Exploratory Data Analysis (EDA) on the generated corpus and proceeded to train and evaluate the downstream infection classification models, validating our results against the ground-truth infection categories.
 
 
 ## Input/Output Example
