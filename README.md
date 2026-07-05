@@ -6,7 +6,7 @@ In the healthcare sector, vast amounts of unstructured clinical data—such as a
 
 ## Visual Abstract
 
-*[כאן כדאי להוסיף תרשים או איור של זרימת העבודה: מ-MIMIC-IV דרך ה-Scaffold-and-Augment ועד לסיווג הסופי]*
+<img width="650" height="300" alt="image" src="https://github.com/user-attachments/assets/53880f00-c8e0-4d0e-be92-686dbd2864b4" />
 
 ## Datasets
 
