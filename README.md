@@ -23,7 +23,7 @@ Our project follows a rigorous, multi-stage pipeline designed to generate realis
 
 1. **Data Acquisition (MIMIC-IV Demo):** We utilized the **MIMIC-IV Clinical Database Demo v2.2**. This dataset provided the foundational structured records (Hosp & ICU modules) required to build our clinical foundation.
 2. **Unified Table Construction:** We synthesized a `unified_table.csv` at the admission-level (one row per `hadm_id`). We carefully selected clinical columns such as demographics, lab results, and procedures, while applying **Anti-Leakage protocols** (generalizing antibiotic names and diagnosis titles) to ensure the model focuses on clinical context rather than explicit labels.
-3. **Fact Profile Generation (Scaffold):** Using our `Scaffold-and-Augment` methodology, we transformed each row from the unified table into multiple, diverse factual profiles in JSON format. Each profile focuses on different clinical aspects (e.g., admission review, lab results, or procedural support), ensuring a rich variety of clinical facts while maintaining the veracity of the original data.
+3. **Fact Profile Generation (Scaffold):** Using a Scaffold-and-Augment methodology, we transformed each row from the unified table into multiple, diverse factual profiles in JSON format. Each profile focuses on different clinical aspects (e.g., admission review, lab results, or procedural support), ensuring a rich variety of clinical facts while maintaining the veracity of the original data.
 4. **Symptom Enrichment & Augmentation:** To mirror real-world subjective reporting, we integrated a symptom knowledge base derived from official clinical guidelines (CDC, IDSA, NHSN). We augmented the profiles by injecting subjective symptoms tailored to specific infection categories (e.g., respiratory symptoms for pneumonia, urinary symptoms for UTI). This ensures clinical consistency—patients are never assigned contradictory symptoms.
 5. **LLM-Based Narrative Synthesis:** We employed local LLMs (via **Ollama**) to convert these structured JSON profiles into natural-sounding clinical narratives. By providing only pre-verified facts, we prevent clinical hallucinations and ensure that the generative model acts as a writer, not an originator of clinical facts.
 6. **EDA & Model Training & Evaluation:** We performed Exploratory Data Analysis (EDA) on the generated corpus and proceeded to train and evaluate the downstream infection classification models, validating our results against the ground-truth infection categories.
@@ -31,8 +31,9 @@ Our project follows a rigorous, multi-stage pipeline designed to generate realis
 
 ## Input/Output Example
 
-* **Input**: Clinical note fragment regarding a 67-year-old male with elevated WBC, invasive monitoring, and documented weakness.
+* **Input**: "A 79-year-old male presented as an urgent transfer from another hospital. He has been experiencing chills, loss of appetite, malaise, and rapid heart rate since admission. During a week-long stay, he underwent percutaneous abdominal drainage and parenteral nutrition. His white blood cell count is 12.6 with 82.9% neutrophils."
 * **Output**: `High Infection Concern`
+
 
 ## Repository Structure
 
