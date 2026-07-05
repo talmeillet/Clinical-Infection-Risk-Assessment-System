@@ -1,24 +1,58 @@
-# Post-Op-Infection-Prediction-NLP
-## Motivation
-Surgical Site Infections (SSI) are among the important postoperative complications and may lead to prolonged hospitalization, readmission, additional treatment, and increased healthcare burden. Discharge summaries often contain rich clinical information that may indicate elevated SSI risk, including surgical details, comorbidities, laboratory values, antibiotic treatment, postoperative course, and wound status. However, this information is usually written as unstructured free text, making it difficult to use directly for automated risk assessment. Since real labeled discharge summaries are difficult to access due to privacy and ethical constraints, this project investigates whether LLM-generated synthetic clinical notes can be used to train and evaluate text classification models for SSI risk prediction.
+# Clinical Infection Risk Assessment System
 
-## Problem Definition
-We define the task as binary text classification. 
-* Input: A synthetic free-text postoperative discharge summary.
-* Output: A binary label predicting the patient's status: High SSI Risk or Low SSI Risk.
+## Project Motivation
 
-Given a synthetic free-text postoperative discharge summary, the model predicts whether the patient is at High SSI Risk or Low SSI Risk. The synthetic summaries will be generated using an attributed generation approach, where each example is conditioned on sampled medical and stylistic attributes such as surgery type, urgency, wound class, comorbidities, laboratory values, antibiotic prophylaxis, postoperative course, and clinical writing style. Labels will be assigned according to explicit literature-based risk rules rather than free-form LLM judgment. The trained classifiers will be compared against zero-shot and few-shot LLM baselines using clinically relevant metrics, especially recall for the high-risk class.
+In the healthcare sector, vast amounts of unstructured clinical data—such as admission summaries, physician notes, and shift reports—contain critical clinical cues indicating patient risk. Currently, manual analysis of these texts is slow, inconsistent, and highly dependent on human expertise. This project aims to automate the detection of patients at high risk for **Nosocomial Infections** using natural language processing. By analyzing unstructured clinical narratives, our system assists medical staff in early identification, patient prioritization, and clinical decision support.
+
+## Visual Abstract
+
+*[כאן כדאי להוסיף תרשים או איור של זרימת העבודה: מ-MIMIC-IV דרך ה-Scaffold-and-Augment ועד לסיווג הסופי]*
+
+## Datasets
+
+We utilized the **MIMIC-IV Clinical Database Demo (v2.2)**. Since the demo lacked free-text notes, we implemented a sophisticated **Scaffold-and-Augment** pipeline to generate high-fidelity, realistic synthetic clinical summaries that map objective clinical data to subjective patient reports.
+
+## Methodology: The Scaffold-and-Augment Pipeline
+
+Our architecture separates deterministic clinical logic from generative text creation to ensure consistency and prevent clinical hallucinations:
+
+* **Phase A: Fact Profile Generation**: Mapping rows from the `unified_table.csv` into hierarchical JSON structures (demographics, labs, procedures, etc.). This expanded our 275 original admissions into ~950 factual profiles.
+* **Phase B: Symptom Enrichment**: Augmenting profiles with subjective symptoms (e.g., pain, chills) based on official clinical guidelines (CDC, IDSA, StatPearls). We generated ~1,900 enriched profiles, ensuring a balanced distribution of severity levels and infection categories.
+* **Phase C: Quality Assurance**: Rigorous validation to ensure label consistency and prevent **label-leakage** (ensuring no clinical labels appear in the synthetic text).
+* **Phase D: LLM Synthesis**: Using local LLMs (via Ollama) to convert verified clinical facts into natural-sounding narratives. This approach provides:
+* **Control**: Every clinical decision is traceable.
+* **Diversity**: Variance is driven by factual profiles rather than just stylistic LLM output.
+* **Accuracy**: Prevention of impossible clinical scenarios (e.g., verbal reports from intubated patients).
 
 
+## Input/Output Example
 
-תקציר ויזואלי
-בסיסי הנתונים בהם השתמשתן
-שיטות ליצירת דאטה סינתטי (ואוגמנטציה)
-דוגמאות לקלט ולפלט, 
-מודלים ותהליכי העבודה, 
-פרמטרים ותהליך האימון, 
-מדדי ההערכה (Metrics), 
-התוצאות, 
-תיאור מבנה הריפוזיטורי (התיקיות)  
-שמות חברות הצוות
-.
+* **Input**: Clinical note fragment regarding a 67-year-old male with elevated WBC, invasive monitoring, and documented weakness.
+* **Output**: `High Infection Concern`
+
+## Repository Structure
+
+```text
+├── Data/               # Raw and processed JSON/CSV files
+├── Notebook/               # Python scripts and Jupyter notebooks
+├── Results/            # Experimental results (CSV/JSON)
+├── Slides/             # Project presentation (PPT/PDF)
+├── Visuals/            # Visual abstract and result figures
+└── README.md
+
+```
+
+## Team Members
+- Tal Meillet
+- Hodaya Yasayev Klenter
+---
+
+### מה חסר להשלמת ה-README?
+
+כדי להפוך אותו ל"מושלם", נצטרך להוסיף את החלקים הבאים ברגע שתסיימי אותם:
+
+1. **Models and Pipelines**: פירוט טכני של המודל שאימנת (איזה LLM שימש כקלאסיפייר? איזה ארכיטקטורה של מודל סיווג?).
+2. **Training Process**: פרמטרים של האימון.
+3. **Metrics & Results**: טבלאות וגרפים (כשתסיימי את שלב 6).
+
+**איך זה נראה לך עד כה? תרצי שאוסיף דגש מסוים על שלב ספציפי בתהליך העבודה שלך?**
