@@ -40,27 +40,41 @@ Our project follows a rigorous, multi-stage pipeline designed to generate realis
 
 ## Repository Structure
 
-```text
-├── Data/               # Raw and processed JSON/CSV files
-├── Notebook/               # Python scripts and Jupyter notebooks
-├── Results/            # Experimental results (CSV/JSON)
-├── Slides/             # Project presentation (PPT/PDF)
-├── Visuals/            # Visual abstract and result figures
-└── README.md
-
+```
+Post-Op-Infection-Prediction-NLP/
+├── README.md
+├── requirements.txt
+├── environment.yml
+├── .gitignore
+├── data/
+│   ├── README.md
+│   ├── 00_mimic_data/
+│   │   └── unified_table.csv
+│   ├── 01_profiles/
+│   │   ├── clean_factual_profiles.jsonl
+│   │   └── clean_symptom_profiles.jsonl
+│   ├── 02_clinical_notes/
+│   │   └── ollama/
+│   │       └── clinical_notes.jsonl
+│   └── 03_notes_splits/
+│       ├── train.jsonl
+│       ├── validation.jsonl
+│       └── synthetic_test.jsonl
+├── notebooks/
+│   ├── README.md
+│   ├── 00_import_and_arrange_mimic.ipynb
+│   ├── 01_create_synthetic_profiles.ipynb
+│   ├── 02_synthetic_corpus_pipeline_openai.ipynb
+│   ├── 03_synthetic_corpus_pipeline_ollama.ipynb
+│   └── 04_split_and_models.ipynb
+└── reports/
+    ├── eda_mimic.png
+    └── eda_synthetic_notes.png
 ```
 
 ## Team Members
 - Tal Meillet
 - Hodaya Yasayev Klenter
----
-
-### מה חסר להשלמת ה-README?
-
-כדי להפוך אותו ל"מושלם", נצטרך להוסיף את החלקים הבאים ברגע שתסיימי אותם:
-
-1. **Models and Pipelines**: פירוט טכני של המודל שאימנת (איזה LLM שימש כקלאסיפייר? איזה ארכיטקטורה של מודל סיווג?).
-2. **Training Process**: פרמטרים של האימון.
 3. **Metrics & Results**: טבלאות וגרפים (כשתסיימי את שלב 6).
 
 **איך זה נראה לך עד כה? תרצי שאוסיף דגש מסוים על שלב ספציפי בתהליך העבודה שלך?**
