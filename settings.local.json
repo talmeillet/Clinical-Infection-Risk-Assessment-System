@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python -c \"import json,sys; nb=json.load\\(open\\('02_synthetic_corpus_pipeline_openai.ipynb',encoding='utf-8'\\)\\); print\\('cells:',len\\(nb['cells']\\)\\); print\\('types:',sorted\\(set\\(c['cell_type'] for c in nb['cells']\\)\\)\\)\")",
-      "Bash(python -c ' *)",
-      "Bash(python \"C:/Users/talme/AppData/Local/Temp/claude/c--Users-talme-Documents-LLM-PROJECT---Copy/4f46fe37-2f68-48b7-8e1c-b03234cc94a5/scratchpad/feas.py\")"
-    ]
-  }
-}
