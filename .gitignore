@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local environment / secrets
+.env
+.env.*
+*.local
+settings.local.json
+.DS_Store
+Thumbs.db
+
+# Models and training artifacts
+models/
+checkpoints/
+runs/
+wandb/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+
+# Large/raw data files
+data/00_mimic_data/mimic-iv-clinical-database-demo-2.2.zip
+
+# Optional: keep generated outputs out of git if they become too large
+# reports/*.png
+# reports/*.csv
