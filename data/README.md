@@ -1,26 +1,46 @@
-# Data folder
+# Data Folder
 
-Each subfolder is one stage of the pipeline, in order. Outputs of one stage
-are the inputs of the next.
+This folder contains the data artifacts used throughout the project pipeline. Each subfolder represents one stage in the workflow, where the output of one stage becomes the input of the next.
 
-Here it is in English, as plain text instead of a table:
+## Folder Structure
 
-**`00_mimic_data/`** - produced by `notebooks/00_import_and_arrange_mimic.ipynb`. Contains the raw MIMIC-IV demo zip (not committed — see below) plus `unified_table.csv`, one row per admission.
+`00_mimic_data/`
+Contains the structured MIMIC-IV Demo data after preprocessing.
+Main output: `unified_table.csv`, an admission-level table with one row per hospital admission.
 
-**`01_profiles/`** - produced by `notebooks/01_create_synthetic_profiles.ipynb`. Contains the deterministic clinical profiles: `clean_factual_profiles.jsonl` (stage A-B) and `clean_symptom_profiles.jsonl` (stage C-D, validated).
+`01_profiles/`
+Contains deterministic clinical profiles generated from the unified table.
+Main files:
 
-**`02_clinical_notes/openai/`** - produced by `notebooks/02_synthetic_corpus_pipeline_openai.ipynb`. Contains GPT-4o-mini generated notes — methodological validation run.
+* `clean_factual_profiles.jsonl`
+* `clean_symptom_profiles.jsonl`
 
-**`02_clinical_notes/ollama/`** - produced by `notebooks/03_synthetic_corpus_pipeline_ollama.ipynb`. Contains Llama 3.1:8b generated notes, rebalanced — **the project deliverable**.
+`02_clinical_notes/`
+Contains synthetic clinical notes generated from the structured profiles using LLM-based text generation.
 
-**`03_notes_splits/`** - produced by `notebooks/04_split_and_models.ipynb`. Contains `train.jsonl`, `validation.jsonl`, and `synthetic_test.jsonl`.
+`02_clinical_notes/ollama/`
+Contains the final locally generated clinical notes used for model training and evaluation.
+Main file:
 
-Want me to update `data/README.md` in the zip I put together earlier to use this format instead of the table?
+* `clinical_notes.jsonl`
 
-## Getting the raw MIMIC-IV data
+`03_notes_splits/`
+Contains the train, validation, and synthetic test splits created for model development and evaluation.
+Main files:
 
-`mimic-iv-clinical-database-demo-2.2.zip` is excluded from version control
-(16 MB+, and PhysioNet data-use terms). Download it from
-[physionet.org/content/mimic-iv-demo/2.2](https://physionet.org/content/mimic-iv-demo/2.2/)
-and place it at `data/00_mimic_data/mimic-iv-clinical-database-demo-2.2.zip`
-before running notebook `00`.
+* `train.jsonl`
+* `validation.jsonl`
+* `synthetic_test.jsonl`
+
+## Raw MIMIC-IV Demo Data
+
+The original file `mimic-iv-clinical-database-demo-2.2.zip` is not included in this repository.
+
+To reproduce the pipeline, download the MIMIC-IV Clinical Database Demo v2.2 from PhysioNet and place it under:
+
+`data/00_mimic_data/mimic-iv-clinical-database-demo-2.2.zip`
+
+Then run the notebooks in order, starting from:
+
+`notebooks/00_import_and_arrange_mimic.ipynb`
+
