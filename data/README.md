@@ -36,11 +36,10 @@ Main files:
 
 The original file `mimic-iv-clinical-database-demo-2.2.zip` is not included in this repository.
 
-To reproduce the pipeline, download the MIMIC-IV Clinical Database Demo v2.2 from PhysioNet and place it under:
+To reproduce the pipeline, download the MIMIC-IV Clinical Database Demo v2.2 from PhysioNet ([physionet.org/content/mimic-iv-demo/2.2](https://physionet.org/content/mimic-iv-demo/2.2/)) and place it under:
 
 `data/00_mimic_data/mimic-iv-clinical-database-demo-2.2.zip`
 
 Then run the notebooks in order, starting from:
 
 `notebooks/00_import_and_arrange_mimic.ipynb`
-
