@@ -1,0 +1,25 @@
+{
+  "note_id": "smoke_0001",
+  "clinical_note": "The patient presented as an urgent transfer from another hospital. He has been admitted for a week-long stay. A white count of 21.6 with 86% neutrophils was noted on admission. Rapid heart rate and sweating were reported by the patient. Central line placement occurred during his hospitalization.",
+  "label": "High Infection Concern",
+  "infection_source": "Other/Mixed",
+  "source_infection_label": 1,
+  "source_symptom_profile_id": "1",
+  "source_profile_id": "1",
+  "source_subject_id": "10004235",
+  "source_hadm_id": "24181354",
+  "symptom_severity": "moderate",
+  "selected_symptoms": [
+    "rapid heart rate",
+    "sweating"
+  ],
+  "writing_style": "Nursing handoff note",
+  "length_style": "Medium-length summary",
+  "structure": "Brief handoff-style paragraph",
+  "model": "llama3.1:8b",
+  "leaked_terms": [],
+  "severity_leakage_terms": [],
+  "treatment_shortcut_terms": [],
+  "boilerplate_terms": [],
+  "note_char_length": 296
+}
