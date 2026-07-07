@@ -22,15 +22,19 @@ Contains synthetic clinical notes generated from the structured profiles using L
 Contains the final locally generated clinical notes used for model training and evaluation.
 Main file:
 
-* `clinical_notes.jsonl`
+* `clinical_notes.jsonl` — the full deliverable corpus.
+* `smoke_test_note.json` / `smoke_test_batch.json` — small sanity-check outputs from early pipeline debugging (single note / small batch), kept for reference only. They are not part of the training corpus and are not consumed by any downstream notebook.
+
+`02_clinical_notes/openai/`
+Intentionally empty. See the note on `notebooks/02_synthetic_corpus_pipeline_openai.ipynb` in the main `README.md` — this notebook served as methodological validation for the note-writing prompt, not as a maintained second corpus.
 
 `03_notes_splits/`
-Contains the train, validation, and synthetic test splits created for model development and evaluation.
+Contains the train, validation, and test splits created for model development and evaluation.
 Main files:
 
 * `train.jsonl`
 * `validation.jsonl`
-* `synthetic_test.jsonl`
+* `test.jsonl`
 
 ## Raw MIMIC-IV Demo Data
 
