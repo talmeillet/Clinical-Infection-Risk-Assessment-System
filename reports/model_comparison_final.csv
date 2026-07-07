@@ -1,0 +1,5 @@
+model,split,recall_high,precision_high,f1_high,roc_auc
+pubmedbert,test,0.839,0.722,0.776,0.812
+gpt2,test,0.811,0.679,0.739,0.746
+gpt2,validation,0.762,0.744,0.753,0.717
+pubmedbert,validation,0.741,0.755,0.748,0.757
