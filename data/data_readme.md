@@ -14,6 +14,7 @@ Main files:
 
 * `clean_factual_profiles.jsonl`
 * `clean_symptom_profiles.jsonl`
+* `symptom_literature_review.md` — the clinical literature (CDC/IDSA/NHSN and specific articles) behind the symptom knowledge base used to enrich these profiles.
 
 `02_clinical_notes/`
 Contains synthetic clinical notes generated from the structured profiles using LLM-based text generation.
