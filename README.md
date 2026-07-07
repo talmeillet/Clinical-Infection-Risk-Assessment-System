@@ -25,7 +25,7 @@ Our project follows a rigorous, multi-stage pipeline designed to generate realis
 2. **Unified Table Construction:** We synthesized a `unified_table.csv` at the admission-level (one row per `hadm_id`). We carefully selected clinical columns such as demographics, lab results, and procedures, while applying **Anti-Leakage protocols** (generalizing antibiotic names and diagnosis titles) to ensure the model focuses on clinical context rather than explicit labels.
 3. **Fact Profile Generation (Scaffold):** Using a Scaffold-and-Augment methodology, we transformed each row from the unified table into multiple, diverse factual profiles in JSON format. Each profile focuses on different clinical aspects (e.g., admission review, lab results, or procedural support), ensuring a rich variety of clinical facts while maintaining the veracity of the original data.
 4. **Symptom Enrichment & Augmentation:** To mirror real-world subjective reporting, we integrated a symptom knowledge base derived from official clinical guidelines (CDC, IDSA, NHSN). We augmented the profiles by injecting subjective symptoms tailored to specific infection categories (e.g., respiratory symptoms for pneumonia, urinary symptoms for UTI). This ensures clinical consistency—patients are never assigned contradictory symptoms.
-5. **LLM-Based Synthesis:** We employed local LLMs (via **Ollama**) to convert these structured JSON profiles into natural-sounding clinical narratives. By providing only pre-verified facts, we prevent clinical hallucinations and ensure that the generative model acts as a writer, not an originator of clinical facts.
+5. **LLM-Based Synthesis:** We employed local LLMs (via **Ollama**) to convert these structured JSON profiles into natural-sounding clinical narratives. By providing only pre-verified facts, we reduces hallucinations through factual scaffolding and quality checks and ensure that the generative model acts as a writer, not an originator of clinical facts.
 
 The symptom knowledge base used in step 4 (CDC/IDSA/NHSN-derived, per infection category) is documented, with the specific clinical literature it draws on, in [`data/01_profiles/symptom_literature_review.md`](data/01_profiles/symptom_literature_review.md).
 
@@ -128,7 +128,6 @@ The main weakness is consistent across both models: **Skin/Soft tissue infection
 Post-Op-Infection-Prediction-NLP/
 ├── README.md
 ├── requirements.txt
-├── environment.yml
 ├── .gitignore
 ├── data/
 │   ├── README.md
