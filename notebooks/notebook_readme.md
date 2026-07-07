@@ -9,6 +9,9 @@ Run in order — each notebook consumes the previous one's output from `../data/
    LLM) that later feeds the note-writer.
 3. **`02_synthetic_corpus_pipeline_openai.ipynb`** — Generates clinical notes
    with GPT-4o-mini. Serves as methodological validation, not the deliverable.
+   Its original run predates the current version of `data/01_profiles/`, so
+   re-running it today draws on the current profiles rather than reproducing
+   that original corpus exactly — see the main `README.md` for details.
 4. **`03_synthetic_corpus_pipeline_ollama.ipynb`** — Generates clinical notes
    with Llama 3.1:8b (local, via Ollama), reusing the same profiles and
    prompt design as notebook 02. This corpus, after rebalancing, is the
