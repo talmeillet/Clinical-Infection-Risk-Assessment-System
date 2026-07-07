@@ -75,6 +75,3 @@ Post-Op-Infection-Prediction-NLP/
 ## Team Members
 - Tal Meillet
 - Hodaya Yasayev Klenter
-3. **Metrics & Results**: טבלאות וגרפים (כשתסיימי את שלב 6).
-
-**איך זה נראה לך עד כה? תרצי שאוסיף דגש מסוים על שלב ספציפי בתהליך העבודה שלך?**
