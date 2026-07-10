@@ -6,7 +6,7 @@
 
 ## Project Motivation
 
-In the healthcare sector, vast amounts of unstructured clinical data—such as admission summaries, physician notes, and shift reports—contain critical clinical cues indicating patient risk. Currently, manual analysis of these texts is slow, inconsistent, and highly dependent on human expertise. This project aims to automate the detection of patients at high risk for Infections in hospitals using natural language processing. By analyzing unstructured clinical narratives, our system assists medical staff in early identification, patient prioritization, and clinical decision support.
+In the healthcare sector, vast amounts of unstructured clinical data-such as admission summaries, physician notes, and shift reports-contain critical clinical cues indicating patient risk. Currently, manual analysis of these texts is slow, inconsistent, and highly dependent on human expertise. This project aims to automate the detection of patients at high risk for Infections in hospitals using natural language processing. By analyzing unstructured clinical narratives, our system assists medical staff in early identification, patient prioritization, and clinical decision support.
 
 ## Datasets
 
@@ -22,14 +22,14 @@ Our project follows a rigorous, multi-stage pipeline designed to generate realis
 1. **Data Acquisition (MIMIC-IV Demo):** We utilized the **MIMIC-IV Clinical Database Demo v2.2**. This dataset provided the foundational structured records (Hosp & ICU modules) required to build our clinical foundation.
 2. **Unified Table Construction:** We synthesized a `unified_table.csv` at the admission-level (one row per `hadm_id`). We carefully selected clinical columns such as demographics, lab results, and procedures, while applying **Anti-Leakage protocols** (generalizing antibiotic names and diagnosis titles) to ensure the model focuses on clinical context rather than explicit labels.
 3. **Fact Profile Generation (Scaffold):** Using a Scaffold-and-Augment methodology, we transformed each row from the unified table into multiple, diverse factual profiles in JSON format. Each profile focuses on different clinical aspects (e.g., admission review, lab results, or procedural support), ensuring a rich variety of clinical facts while maintaining the veracity of the original data.
-4. **Symptom Enrichment & Augmentation:** To mirror real-world subjective reporting, we integrated a symptom knowledge base derived from official clinical guidelines (CDC, IDSA, NHSN). We augmented the profiles by injecting subjective symptoms tailored to specific infection categories (e.g., respiratory symptoms for pneumonia, urinary symptoms for UTI). This ensures clinical consistency—patients are never assigned contradictory symptoms.
+4. **Symptom Enrichment & Augmentation:** To mirror real-world subjective reporting, we integrated a symptom knowledge base derived from official clinical guidelines (CDC, IDSA, NHSN). We augmented the profiles by injecting subjective symptoms tailored to specific infection categories (e.g., respiratory symptoms for pneumonia, urinary symptoms for UTI). This ensures clinical consistency-patients are never assigned contradictory symptoms.
 5. **LLM-Based Synthesis:** We employed local LLMs (via **Ollama**) to convert these structured JSON profiles into natural-sounding clinical narratives. By providing only pre-verified facts, we reduces hallucinations through factual scaffolding and quality checks and ensure that the generative model acts as a writer, not an originator of clinical facts.
 
 The symptom knowledge base used in step 4 (CDC/IDSA/NHSN-derived, per infection category) is documented, with the specific clinical literature it draws on, in [`data/01_profiles/symptom_literature_review.md`](data/01_profiles/symptom_literature_review.md).
 
 **Design decision — notes per admission:** the augmentation stage can generate multiple diverse note variants per admission. We initially generated 5 per admission, but found this let the downstream classifiers pick up on repeated phrasing patterns from the same admission and overfit noticeably faster; capping at 3 (see `MAX_NOTES_PER_ORIGINAL` in notebook `04`) kept enough variety for training while reducing that effect.
 
-> **Note on `notebooks/02_synthetic_corpus_pipeline_openai.ipynb`:** this notebook's original run — used to develop and validate the note-writing prompt later reused in notebook `03` — was performed against an earlier version of the clinical profiles. Re-running it today will draw on the current `data/01_profiles/` output instead, so it may not reproduce the original historical corpus exactly. Its role in this repository is methodological validation of the prompt design, not a maintained second corpus; `data/02_clinical_notes/openai/` is intentionally empty for that reason.
+> **Note on `notebooks/02_synthetic_corpus_pipeline_openai.ipynb`:** this notebook's original run - used to develop and validate the note-writing prompt later reused in notebook `03` - was performed against an earlier version of the clinical profiles. Re-running it today will draw on the current `data/01_profiles/` output instead, so it may not reproduce the original historical corpus exactly. Its role in this repository is methodological validation of the prompt design, not a maintained second corpus; `data/02_clinical_notes/openai/` is intentionally empty for that reason.
 
 ## Input/Output Example
 
@@ -39,18 +39,23 @@ The symptom knowledge base used in step 4 (CDC/IDSA/NHSN-derived, per infection 
 # Models
 **EDA & Model Training & Evaluation:** We performed Exploratory Data Analysis (EDA) on the generated corpus and proceeded to train and evaluate the downstream infection classification models, validating our results against the ground-truth infection categories.
 
-Two models were fine-tuned for the binary classification task (High vs. Low Infection Concern): **PubMedBERT** (`microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext`, from HuggingFace) and a **GPT-2**-based classifier as a general-purpose baseline. Both were trained with class-weighted loss and patient-disjoint train/validation/test splits (`StratifiedGroupKFold`, grouped by `source_subject_id`) to prevent leakage between splits.
+Three models are compared, forming a ladder from no training at all to full domain-specific fine-tuning:
+1. Zero-shot baseline (Ollama, llama3.1:8b) - the same local LLM used to generate the notes, prompted directly with no task-specific training, to measure what fine-tuning is actually buying us over just asking the model.
+2. GPT-2 - fine-tuned on our data, but with no biomedical pretraining.
+3. PubMedBERT (microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext, from HuggingFace) - fine-tuned on our data, pretrained on biomedical text.
 
-**Why PubMedBERT?** It is pretrained on PubMed abstracts and full-text articles, so it already has useful priors over biomedical vocabulary and phrasing before we fine-tune it on our own clinical notes — as opposed to a general-purpose language model that has to learn that vocabulary from our (comparatively small) corpus alone. We deliberately compared it against GPT-2, a general-purpose model with no biomedical pretraining, specifically to isolate and demonstrate the effect of domain-specific pretraining on this task, rather than just picking one architecture and reporting its score in isolation.
+The two fine-tuned classifiers were trained with class-weighted loss and patient-disjoint train/validation/test splits (StratifiedGroupKFold, grouped by source_subject_id) to prevent leakage between splits.
+
+**Why PubMedBERT?** It is pretrained on PubMed abstracts and full-text articles, so it already has useful priors over biomedical vocabulary and phrasing before we fine-tune it on our own clinical notes - as opposed to a general-purpose language model that has to learn that vocabulary from our (comparatively small) corpus alone. We deliberately compared it against GPT-2, a general-purpose model with no biomedical pretraining, specifically to isolate and demonstrate the effect of domain-specific pretraining on this task, rather than just picking one architecture and reporting its score in isolation.
 
 ## Why these metrics
 
 - **Recall (HIGH)** is the metric we care about most clinically: it's the fraction of truly concerning cases the model actually catches. A missed HIGH case (false negative) means a real infection risk goes unflagged, which is the more costly error in a clinical screening context.
 - **Precision (HIGH)** controls the false-alarm rate: how often a HIGH flag turns out to be wrong. Too low, and clinicians using the tool would face alert fatigue and start ignoring it.
 - **F1 (HIGH)** balances the two into one number, useful for ranking models against each other.
-- **ROC-AUC** summarizes ranking quality across *all* possible thresholds, not just the one we chose — useful for comparing models independent of where the operating point is set.
+- **ROC-AUC** summarizes ranking quality across *all* possible thresholds, not just the one we chose - useful for comparing models independent of where the operating point is set.
 
-We picked the decision threshold on the validation set to balance both classes (macro-F1) rather than maximizing recall alone, since a threshold tuned purely for HIGH recall tends to over-predict HIGH and hurt LOW precision — see the Results below for where that trade-off still shows up.
+We picked the decision threshold on the validation set to balance both classes (macro-F1) rather than maximizing recall alone, since a threshold tuned purely for HIGH recall tends to over-predict HIGH and hurt LOW precision - see the Results below for where that trade-off still shows up.
 
 # Results
 
@@ -76,7 +81,7 @@ PubMedBERT outperforms the GPT-2 baseline on every metric, consistent with the e
 </tr>
 </table>
 
-**Performance by infection type — PubMedBERT (test split):**
+**Performance by infection type - PubMedBERT (test split):**
 
 | Infection type | % Correct | Notes |
 |---|---|---|
@@ -86,7 +91,7 @@ PubMedBERT outperforms the GPT-2 baseline on every metric, consistent with the e
 | Skin/Soft tissue | 63.9% | Weakest infection category for both models |
 | No infection (LOW, true negatives) | 65.5% | 58 of 168 true-LOW notes predicted HIGH |
 
-**Performance by infection type — GPT-2 (test split):**
+**Performance by infection type - GPT-2 (test split):**
 
 | Infection type | % Correct | Notes |
 |---|---|---|
@@ -107,11 +112,11 @@ PubMedBERT outperforms the GPT-2 baseline on every metric, consistent with the e
 </tr>
 </table>
 
-Both models are consistently strongest on Bloodstream/Sepsis and weakest on Skin/Soft tissue infections, and both misclassify a meaningful share of true LOW-concern notes as HIGH — i.e., recall on HIGH cases comes at some cost to precision on LOW cases. Clinically, Bloodstream/Sepsis notes likely contain sharper, less ambiguous symptom language (e.g. clear systemic signs) than Skin/Soft tissue notes, which may share more surface-level phrasing with non-infectious post-operative discomfort — making that boundary genuinely harder, not just a model weakness. Full breakdowns, confusion matrices, and training curves for both models are in `reports/`.
+Both models are consistently strongest on Bloodstream/Sepsis and weakest on Skin/Soft tissue infections, and both misclassify a meaningful share of true LOW-concern notes as HIGH - i.e., recall on HIGH cases comes at some cost to precision on LOW cases. Clinically, Bloodstream/Sepsis notes likely contain sharper, less ambiguous symptom language (e.g. clear systemic signs) than Skin/Soft tissue notes, which may share more surface-level phrasing with non-infectious post-operative discomfort - making that boundary genuinely harder, not just a model weakness. Full breakdowns, confusion matrices, and training curves for both models are in `reports/`.
 
 # Conclusion
 
-The end-to-end pipeline — from raw MIMIC-IV admissions to a trained infection-concern classifier — works as designed, and the anti-leakage safeguards built into the scaffold-and-augment stage appear to have held: performance differences between infection types track plausible clinical difficulty rather than an obvious shortcut. PubMedBERT's edge over GPT-2 on every metric supports the choice of a biomedically-pretrained encoder for this task.
+The end-to-end pipeline - from raw MIMIC-IV admissions to a trained infection-concern classifier — works as designed, and the anti-leakage safeguards built into the scaffold-and-augment stage appear to have held: performance differences between infection types track plausible clinical difficulty rather than an obvious shortcut. PubMedBERT's edge over GPT-2 on every metric supports the choice of a biomedically-pretrained encoder for this task.
 
 The main weakness is consistent across both models: **Skin/Soft tissue infections** and **true LOW-concern (no infection) cases** are the hardest to classify correctly, suggesting these notes carry more clinically ambiguous or overlapping symptom language than, for example, Bloodstream/Sepsis cases (which are comparatively unambiguous). This matches what we observed directly in earlier LOW-vs-HIGH threshold analysis on the validation set (see notebook `04`).
 
