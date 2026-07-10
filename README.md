@@ -80,9 +80,9 @@ Both fine-tuned models clearly outperform the zero-shot baseline on every compar
 <th>PubMedBERT</th>
 </tr>
 <tr>
-<td><img src="reports/confusion_matrix_ollama_zero_shot_test.png" width="280" alt="Confusion matrix - zero-shot Ollama, test split"></td>
-<td><img src="reports/confusion_matrix_gpt2_test.png" width="280" alt="Confusion matrix - GPT-2, test split"></td>
-<td><img src="reports/confusion_matrix_pubmedbert_test.png" width="280" alt="Confusion matrix - PubMedBERT, test split"></td>
+<td><img src="reports/confusion_matrix_ollama_zero_shot_test.png" width="300" alt="Confusion matrix - zero-shot Ollama, test split"></td>
+<td><img src="reports/confusion_matrix_gpt2_test.png" width="300" alt="Confusion matrix - GPT-2, test split"></td>
+<td><img src="reports/confusion_matrix_pubmedbert_test.png" width="300" alt="Confusion matrix - PubMedBERT, test split"></td>
 </tr>
 </table>
 
@@ -123,9 +123,9 @@ Both fine-tuned models clearly outperform the zero-shot baseline on every compar
 <th>PubMedBERT</th>
 </tr>
 <tr>
-<td><img src="reports/infection_type_accuracy_ollama_zero_shot_test.png" width="280" alt="Percent correct by infection type - zero-shot Ollama, test split"></td>
-<td><img src="reports/infection_type_accuracy_gpt2_test.png" width="280" alt="Percent correct by infection type - GPT-2, test split"></td>
-<td><img src="reports/infection_type_accuracy_pubmedbert_test.png" width="280" alt="Percent correct by infection type - PubMedBERT, test split"></td>
+<td><img src="reports/infection_type_accuracy_ollama_zero_shot_test.png" width="350" alt="Percent correct by infection type - zero-shot Ollama, test split"></td>
+<td><img src="reports/infection_type_accuracy_gpt2_test.png" width="350" alt="Percent correct by infection type - GPT-2, test split"></td>
+<td><img src="reports/infection_type_accuracy_pubmedbert_test.png" width="350" alt="Percent correct by infection type - PubMedBERT, test split"></td>
 </tr>
 </table>
 All three models are strongest on Bloodstream/Sepsis and weakest on Skin/Soft tissue and Urinary infections, and all three misclassify a meaningful share of true LOW-concern notes as HIGH - i.e., recall on HIGH cases comes at some cost to precision on LOW cases, and this trade-off is worst for the zero-shot baseline. Clinically, Bloodstream/Sepsis notes likely contain sharper, less ambiguous symptom language (e.g. clear systemic signs) than Skin/Soft tissue or Urinary notes, which may share more surface-level phrasing with non-infectious complaints - making that boundary genuinely harder, not just a model weakness. The zero-shot model's collapse on Urinary infections specifically (16.7%, vs. 83–92% for the fine-tuned models) is the clearest single piece of evidence in this project that fine-tuning on our synthetic corpus teaches the models something the base LLM does not already know from general pretraining. Full breakdowns, confusion matrices, and training curves for all three models are in `reports/`.
