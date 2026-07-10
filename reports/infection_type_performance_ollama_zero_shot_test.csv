@@ -1,0 +1,6 @@
+infection_type,total,correct,accuracy,high_cases,high_predicted,pct_correct
+Bloodstream/Sepsis,36,35,0.972,36,35,97.2
+Other/Mixed,96,75,0.781,96,75,78.1
+Skin/Soft tissue,36,15,0.417,36,15,41.7
+Urinary,12,2,0.167,12,2,16.7
+none,168,87,0.518,0,81,51.8
