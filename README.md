@@ -8,18 +8,16 @@
 
 In the healthcare sector, vast amounts of unstructured clinical data—such as admission summaries, physician notes, and shift reports—contain critical clinical cues indicating patient risk. Currently, manual analysis of these texts is slow, inconsistent, and highly dependent on human expertise. This project aims to automate the detection of patients at high risk for Infections in hospitals using natural language processing. By analyzing unstructured clinical narratives, our system assists medical staff in early identification, patient prioritization, and clinical decision support.
 
-## Visual Abstract
-
-<img width="650" height="300" alt="image" src="https://github.com/user-attachments/assets/53880f00-c8e0-4d0e-be92-686dbd2864b4" />
-
 ## Datasets
 
 We utilized the **MIMIC-IV Clinical Database Demo (v2.2)**. Since the demo lacked free-text notes, we implemented a sophisticated **Scaffold-and-Augment** pipeline to generate high-fidelity, realistic synthetic clinical summaries that map objective clinical data to subjective patient reports.
 
 
-### Project Methodology: The Pipeline from MIMIC-IV to Synthetic Clinical Notes
+## Project Methodology: The Pipeline from MIMIC-IV to Synthetic Clinical Notes
 
 Our project follows a rigorous, multi-stage pipeline designed to generate realistic clinical narratives while ensuring data integrity and clinical accuracy.
+
+<img width="650" height="300" alt="image" src="https://github.com/user-attachments/assets/53880f00-c8e0-4d0e-be92-686dbd2864b4" />
 
 1. **Data Acquisition (MIMIC-IV Demo):** We utilized the **MIMIC-IV Clinical Database Demo v2.2**. This dataset provided the foundational structured records (Hosp & ICU modules) required to build our clinical foundation.
 2. **Unified Table Construction:** We synthesized a `unified_table.csv` at the admission-level (one row per `hadm_id`). We carefully selected clinical columns such as demographics, lab results, and procedures, while applying **Anti-Leakage protocols** (generalizing antibiotic names and diagnosis titles) to ensure the model focuses on clinical context rather than explicit labels.
