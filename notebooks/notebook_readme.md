@@ -1,6 +1,6 @@
 # Notebooks
 
-Run in order — each notebook consumes the previous one's output from `../data/`.
+Run in order - each notebook consumes the previous one's output from `../data/`.
 
 1. **`00_import_and_arrange_mimic.ipynb`** - Builds `unified_table.csv`, one row per hospital admission, from the MIMIC-IV demo `hosp` + `icu` modules.
 2. **`01_create_synthetic_profiles.ipynb`** - Turns each admission into structured, de-identified clinical profiles.
@@ -13,9 +13,10 @@ Run in order — each notebook consumes the previous one's output from `../data/
 4. **`03_synthetic_corpus_pipeline_ollama.ipynb`** - Generates the final synthetic clinical note corpus using Llama 3.1:8B locally through Ollama.
    This notebook uses the same factual profiles and overall generation methodology validated in Notebook 02, with prompt adaptations and additional quality-control refinements designed for the local model behavior.
    The generation process includes checks for diagnosis leakage, unsupported clinical statements, repetitive templates, and factual consistency before creating the final deliverable dataset.
-5. **`04_split_and_models.ipynb`** - Performs exploratory data analysis, patient-level train / validation / test splitting, and classifier training for infection-concern prediction.
-   During experimentation, different synthetic augmentation settings were evaluated. Initial experiments with larger augmentation produced more generated notes per admission but introduced higher similarity between samples.  
-   The final dataset uses a reduced augmentation strategy (3 generated notes per admission), improving the balance between dataset size, diversity, and model performance.
+5. **`04_split_and_models.ipynb`** - Performs exploratory data analysis,patient-level train / validation / test splitting, and infection-concern classification. Establishes a zero-shot baseline using the same base LLM (Llama 3.1:8b via Ollama) that generated the notes - prompted directly, with no task-specific training - to measure how much fine-tuning actually adds over just asking the model.
+Two fine-tuned classifiers, PubMedBERT and GPT-2, are then trained and evaluated against that baseline.
+During experimentation, different synthetic augmentation settings were evaluated. Initial experiments with larger augmentation produced more generated notes per admission but introduced higher similarity between samples.
+The final dataset uses a reduced augmentation strategy (3 generated notes per admission), improving the balance between dataset size, diversity, and model performance.
 
 ## Note on cached model weights
 
