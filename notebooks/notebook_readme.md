@@ -22,5 +22,5 @@ The final dataset uses a reduced augmentation strategy (3 generated notes per ad
 
 `transformers`/`torch` model downloads are
 cached locally when notebook 04 runs. That cache is intentionally excluded
-from version control (see `../.gitignore`) — it's re-downloaded automatically
+from version control (see `../.gitignore`) - it's re-downloaded automatically
 on first run, no manual step needed.
