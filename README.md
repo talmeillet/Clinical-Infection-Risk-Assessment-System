@@ -192,4 +192,4 @@ Post-Op-Infection-Prediction-NLP/
 
 ## A note on trained model weights
 
-Trained model checkpoints (PubMedBERT, GPT-2) are not included in this repository. They are large binary files (hundreds of MB to a few GB each) that Git is not designed to store, and they aren't needed to evaluate this project — every result they produced (confusion matrices, training curves, per-category breakdowns, and the final comparison table) is already saved under `reports/`. The full pipeline is deterministic and reproducible from the notebooks and data included here.
+Trained model checkpoints (PubMedBERT, GPT-2) are not included in this repository. They are large binary files (hundreds of MB to a few GB each) that Git is not designed to store, and they aren't needed to evaluate this project - every result they produced (confusion matrices, training curves, per-category breakdowns, and the final comparison table) is already saved under `reports/`. The full pipeline is deterministic and reproducible from the notebooks and data included here.
